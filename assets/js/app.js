@@ -4,7 +4,9 @@
 // use moment() to grab day and hour, save to global var
 var tableBodyEl = $('#tablebody')
 var time = moment();
+var displayTime = time.format('hA')
 console.log(time.format('HHmm'))
+console.log(time.format('hA'))
 //format the moment here instead of the var so we can format it for comparisons later
 $('#currentDay').text(time.format('dddd - hA'))
 // WHEN I scroll down
@@ -71,7 +73,7 @@ function getSched(){
 
 //generate the table rows
 sched.forEach(function(item,index){
-    var rowEl = $('<tr>').addClass(item.time.toString());
+    var rowEl = $('<tr>').addClass(item.displayTime);
     var timeEl = $('<td>').text(item.displayTime);
     var textEl = $('<td>').text(item.text).addClass('text');
     var saveEl = $('<td>').addClass('col-1');
@@ -85,6 +87,26 @@ sched.forEach(function(item,index){
 // WHEN I view the timeblocks for that day
 // THEN each timeblock is color coded to indicate whether it is in the past, present, or future
 // based on textContent or data-time? compare to time var
+function colorSched(){
+    console.log($('tb').children() + ' = tr class')
+    console.log(displayTime+ ' = displayTime')
+    if ($('tr').attr('class') > displayTime){
+        $('tr').addClass('future');
+    } else if ($('tr').attr('class') < displayTime){
+        $('tr').addClass('past');
+    } else {
+        $('tr').addClass('present');
+    }
+
+
+    // $('tr').forEach(function(item,index){
+    //     if (item.displayTime > time.format(hA)){
+    //         $(item).addClass('future');
+    //     }
+    // })
+}
+colorSched()
+
 // WHEN I click into a timeblock
 
 // click listener on container, then grab target, see if it is a save or a text
@@ -96,7 +118,7 @@ sched.forEach(function(item,index){
 // })
 $('.save').click(function(event){
     console.log('row class = ' + $(event.target).parent().parent().attr('class'));
-    
+
 })
 // THEN I can enter an event
 // https://stackoverflow.com/questions/28845037/input-text-value-into-a-div
