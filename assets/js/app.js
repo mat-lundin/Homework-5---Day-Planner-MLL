@@ -88,7 +88,7 @@ sched.forEach(function(item,index){
 // THEN each timeblock is color coded to indicate whether it is in the past, present, or future
 // based on textContent or data-time? compare to time var
 function colorSched(){
-    console.log($('tb').children() + ' = tr class')
+    console.log($('tbody').children().attr('class') + ' = tr class')
     console.log(displayTime+ ' = displayTime')
     if ($('tr').attr('class') > displayTime){
         $('tr').addClass('future');
