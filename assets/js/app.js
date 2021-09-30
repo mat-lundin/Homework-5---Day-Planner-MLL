@@ -82,7 +82,7 @@ sched.forEach(function(item,index){
     var textEl = $('<td>').addClass('text');
     var saveEl = $('<td>').addClass('col-1');
     var saveBtnEl = $('<button>').text('Save').addClass('save');
-    var textInEl = $('<input>').attr('type','text').val(item.text)
+    var textInEl = $('<input>').attr('type','text').addClass('col-11').val(item.text)
     saveEl.append(saveBtnEl);
     rowEl.append(timeEl);
     rowEl.append(textEl);
