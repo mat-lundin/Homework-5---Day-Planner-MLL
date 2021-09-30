@@ -4,62 +4,64 @@
 // use moment() to grab day and hour, save to global var
 var tableBodyEl = $('#tablebody')
 var time = moment();
-var displayTime = time.format('hA')
+var milTime = parseInt(time.format('HH'))
+console.log('milTime = '+ milTime)
 console.log(time.format('HHmm'))
 console.log(time.format('hA'))
+console.log(typeof moment().format('HH')+' = hours type')
 //format the moment here instead of the var so we can format it for comparisons later
 $('#currentDay').text(time.format('dddd - hA'))
 // WHEN I scroll down
 // THEN I am presented with timeblocks for standard business hours
 // html table generator? or create table based on array of objects?
-var sched = [
+var sched = JSON.parse(localStorage.getItem('sched')) || [
     {
-        time: '0900',
+        time: 9,
         displayTime: '9AM',
         text: ''
     },
     {
-        time: '1000',
+        time: 10,
         displayTime: '10AM',
         text: ''
     },
     {
-        time: '1100',
+        time: 11,
         displayTime: '11AM',
         text: ''
     },
     {
-        time: '1200',
+        time: 12,
         displayTime: '12PM',
         text: ''
     },
     {
-        time: '1300',
+        time: 13,
         displayTime: '1PM',
         text: ''
     },
     {
-        time: '1400',
+        time: 14,
         displayTime: '2PM',
         text: ''
     },
     {
-        time: '1500',
+        time: 15,
         displayTime: '3PM',
         text: ''
     },
     {
-        time: '1600',
+        time: 16,
         displayTime: '4PM',
         text: ''
     },
     {
-        time: '1700',
+        time: 17,
         displayTime: '5PM',
         text: ''
     },
     {
-        time: '1800',
+        time: 18,
         displayTime: '6PM',
         text: ''
     }
@@ -73,38 +75,57 @@ function getSched(){
 
 //generate the table rows
 sched.forEach(function(item,index){
-    var rowEl = $('<tr>').addClass(item.displayTime);
+    console.log(item.time)
+    var rowEl = $('<tr>').addClass(item.time);
+    var rowEl = $('<tr>').attr('data-time',item.time)
     var timeEl = $('<td>').text(item.displayTime);
     var textEl = $('<td>').text(item.text).addClass('text');
     var saveEl = $('<td>').addClass('col-1');
     var saveBtnEl = $('<button>').text('Save').addClass('save');
+    var textInEl = $('<input>').attr('type','text')
     saveEl.append(saveBtnEl);
     rowEl.append(timeEl);
     rowEl.append(textEl);
     rowEl.append(saveEl);
+    textEl.append(textInEl);
     tableBodyEl.append(rowEl);
 });
 // WHEN I view the timeblocks for that day
 // THEN each timeblock is color coded to indicate whether it is in the past, present, or future
 // based on textContent or data-time? compare to time var
 function colorSched(){
-    console.log($('tbody').children().attr('class') + ' = tr class')
-    console.log(displayTime+ ' = displayTime')
-    if ($('tr').attr('class') > displayTime){
-        $('tr').addClass('future');
-    } else if ($('tr').attr('class') < displayTime){
-        $('tr').addClass('past');
-    } else {
-        $('tr').addClass('present');
-    }
+    // console.log($('tbody').children().attr('class') + ' = tr class')
+    // console.log(sched.time+ ' = displayTime')
 
-
-    // $('tr').forEach(function(item,index){
-    //     if (item.displayTime > time.format(hA)){
-    //         $(item).addClass('future');
-    //     }
-    // })
+    $('tr').each(function(){
+        // console.log($(this).attr('data-time') + ' is this')
+        // console.log($('tr').attr('data-time') + ' =tr data time')
+        console.log($(this).attr('data-time')+' = this data-time')
+        console.log(milTime+ ' = milTime')
+        console.log($(this).attr('data-time') > milTime)
+        if ($(this).attr('data-time') > milTime){
+            $(this).addClass('future');
+        } else if ($(this).attr('data-time') < milTime){
+            $(this).addClass('past');
+        } else {
+            $(this).addClass('present');
+        }
+    })
+    // if ($('tr').attr('data-time') > milTime){
+    //     $('tr').addClass('future');
+    // } else if ($('tr').attr('data-time') < milTime){
+    //     $('tr').addClass('past');
+    // } else {
+    //     $('tr').addClass('present');
+    // }
 }
+
+//     // $('tr').forEach(function(item,index){
+//     //     if (item.displayTime > time.format(hA)){
+//     //         $(item).addClass('future');
+//     //     }
+//     // })
+// }
 colorSched()
 
 // WHEN I click into a timeblock
@@ -117,9 +138,18 @@ colorSched()
     
 // })
 $('.save').click(function(event){
-    console.log('row class = ' + $(event.target).parent().parent().attr('class'));
-
+    // console.log('row class = ' + $(event.target).parent().parent().attr('data-time'));
+    console.log('this thing = '+$(this).parent().siblings('.text').children('input').val())
+    sched.forEach(function(item, index) {
+        console.log(typeof $(event.target).parent().siblings('.text').children('input').val() +' = type of this thing')
+        if (item.time ==  $(event.target).parent().parent().attr('data-time')){
+            item.text = $(event.target).parent().siblings('.text').children('input').val()
+        }
+    }
+    )
+    console.log(sched)
 })
+
 // THEN I can enter an event
 // https://stackoverflow.com/questions/28845037/input-text-value-into-a-div
 // event listener on the div that has a key listener loop that appends to .textContent
