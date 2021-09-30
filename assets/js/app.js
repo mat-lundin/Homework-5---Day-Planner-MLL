@@ -14,7 +14,7 @@ $('#currentDay').text(time.format('dddd - hA'))
 // WHEN I scroll down
 // THEN I am presented with timeblocks for standard business hours
 // html table generator? or create table based on array of objects?
-var sched = JSON.parse(localStorage.getItem('sched')) || [
+var sched = JSON.parse(localStorage.getItem('schedule')) || [
     {
         time: 9,
         displayTime: '9AM',
@@ -68,10 +68,10 @@ var sched = JSON.parse(localStorage.getItem('sched')) || [
 ]
 // console.log(time.format('HHmm') > sched[1].time)
 
-//update sched to be whatever is in local storage
-function getSched(){
-    sched = localStorage.getItem('sched');
-};
+//update sched to be whatever is in local storage - replaced with variable ||
+// function getSched(){
+//     sched = localStorage.getItem('schedule');
+// };
 
 //generate the table rows
 sched.forEach(function(item,index){
@@ -79,10 +79,10 @@ sched.forEach(function(item,index){
     var rowEl = $('<tr>').addClass(item.time);
     var rowEl = $('<tr>').attr('data-time',item.time)
     var timeEl = $('<td>').text(item.displayTime);
-    var textEl = $('<td>').text(item.text).addClass('text');
+    var textEl = $('<td>').addClass('text');
     var saveEl = $('<td>').addClass('col-1');
     var saveBtnEl = $('<button>').text('Save').addClass('save');
-    var textInEl = $('<input>').attr('type','text')
+    var textInEl = $('<input>').attr('type','text').val(item.text)
     saveEl.append(saveBtnEl);
     rowEl.append(timeEl);
     rowEl.append(textEl);
@@ -96,7 +96,6 @@ sched.forEach(function(item,index){
 function colorSched(){
     // console.log($('tbody').children().attr('class') + ' = tr class')
     // console.log(sched.time+ ' = displayTime')
-
     $('tr').each(function(){
         // console.log($(this).attr('data-time') + ' is this')
         // console.log($('tr').attr('data-time') + ' =tr data time')
@@ -126,6 +125,10 @@ function colorSched(){
 //     //     }
 //     // })
 // }
+
+//run colors every second so they change when the hour turns. this was unsuccessful. future release!
+// setInterval(colorSched,1000);
+
 colorSched()
 
 // WHEN I click into a timeblock
@@ -147,6 +150,7 @@ $('.save').click(function(event){
         }
     }
     )
+    localStorage.setItem('schedule',JSON.stringify(sched));
     console.log(sched)
 })
 
